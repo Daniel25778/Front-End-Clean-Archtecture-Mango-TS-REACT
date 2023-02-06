@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
-import { mockAuthentication } from '../../../domain/test/mock-authentcation'
+import { mockAuthentication } from '@/domain/test/mock-authentcation'
 /* eslint-disable comma-dangle */
-import { HttpPostClientSpy } from './../../test/mock-http-client'
+import { HttpPostClientSpy } from '@/data/test/mock-http-client'
 /* eslint-disable space-before-function-paren */
 
 import { RemoteAuthentication } from './remote-authentication'
