@@ -1,4 +1,9 @@
 /* eslint-disable comma-dangle */
+import {
+  HttpResponse,
+  HttpStatusCode,
+} from '@/data/protocols/http/http-response'
+/* eslint-disable comma-dangle */
 /* eslint-disable space-before-function-paren */
 import {
   HttpPostClient,
@@ -8,10 +13,13 @@ import {
 export class HttpPostClientSpy implements HttpPostClient {
   url?: string
   body?: object
+  response: HttpResponse = {
+    statusCode: HttpStatusCode.noContent,
+  }
 
-  async post(params: HttpPostParams): Promise<void> {
+  async post(params: HttpPostParams): Promise<HttpResponse> {
     this.url = params.url
     this.body = params.body
-    return Promise.resolve()
+    return Promise.resolve(this.response)
   }
 }
