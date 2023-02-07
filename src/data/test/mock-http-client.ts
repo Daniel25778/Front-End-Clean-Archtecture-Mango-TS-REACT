@@ -2,13 +2,11 @@
 import {
   HttpResponse,
   HttpStatusCode,
-} from '@/data/protocols/http/http-response'
-/* eslint-disable comma-dangle */
-/* eslint-disable space-before-function-paren */
-import {
   HttpPostClient,
   HttpPostParams,
-} from '@/data/protocols/http/http-post-client'
+} from '@/data/protocols/http'
+/* eslint-disable comma-dangle */
+/* eslint-disable space-before-function-paren */
 
 export class HttpPostClientSpy<T, R> implements HttpPostClient<T, R> {
   url?: string

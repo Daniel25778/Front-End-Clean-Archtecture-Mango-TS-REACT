@@ -1,7 +1,7 @@
-import { AccountModel } from 'domain/models/account-model'
+import { AccountModel } from 'domain/models'
 /* eslint-disable comma-dangle */
+import { AuthenticationParams } from '@/domain/usecases'
 import { faker } from '@faker-js/faker'
-import { AuthenticationParams } from '@/domain/usecases/authentication'
 
 export const mockAuthentication = (): AuthenticationParams => ({
   email: faker.internet.email(),

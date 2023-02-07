@@ -1,4 +1,4 @@
-import { HttpResponse } from './http-response'
+import { HttpResponse } from '.'
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
 
 export type HttpPostParams<T> = {

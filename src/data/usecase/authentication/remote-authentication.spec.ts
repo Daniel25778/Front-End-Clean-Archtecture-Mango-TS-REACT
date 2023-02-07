@@ -1,19 +1,19 @@
+/* eslint-disable comma-dangle */
 /* eslint-disable @typescript-eslint/indent */
-import { AccountModel } from 'domain/models/account-model'
-import { AuthenticationParams } from 'domain/usecases/authentication'
-import { HttpStatusCode } from '@/data/protocols/http/http-response'
+import { AccountModel } from 'domain/models'
+import { AuthenticationParams } from 'domain/usecases'
+import { HttpStatusCode } from '@/data/protocols/http'
 import { faker } from '@faker-js/faker'
 import {
   mockAccountModel,
   mockAuthentication,
 } from '@/domain/test/mock-account'
 /* eslint-disable comma-dangle */
-import { HttpPostClientSpy } from '@/data/test/mock-http-client'
+import { HttpPostClientSpy } from '@/data/test'
 /* eslint-disable space-before-function-paren */
 
 import { RemoteAuthentication } from './remote-authentication'
-import { InvalidCredentialsError } from '@/domain/errors/invalid-credential-error'
-import { UnexpectedError } from '@/domain/errors/unexpected-error'
+import { InvalidCredentialsError, UnexpectedError } from '@/domain/errors'
 
 interface SutTypes {
   sut: RemoteAuthentication
