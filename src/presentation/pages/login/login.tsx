@@ -9,7 +9,7 @@ import { Validation } from '@/presentation/protocols/validation'
 import { Authentication } from '@/domain/usecases'
 
 type Props = {
-  validation?: Validation
+  validation: Validation
   authentication: Authentication
 }
 
