@@ -1,6 +1,12 @@
 import React from 'react'
-import {faker} from '@faker-js/faker'
-import { render, RenderResult, fireEvent, cleanup, waitFor } from '@testing-library/react'
+import { faker } from '@faker-js/faker'
+import {
+  render,
+  RenderResult,
+  fireEvent,
+  cleanup,
+  waitFor,
+} from '@testing-library/react'
 import Login from './login'
 import { ValidationStub, AuthenticationSpy } from '@/presentation/test/'
 import { InvalidCredentialsError } from '@/domain/errors'
@@ -19,31 +25,47 @@ const makeSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub()
   const authenticationSpy = new AuthenticationSpy()
   validationStub.errorMessage = params?.validationError
-  const sut = render(<Login validation={validationStub} authentication={authenticationSpy} />)
+  const sut = render(
+    <Login validation={validationStub} authentication={authenticationSpy} />
+  )
   return {
     sut,
-    authenticationSpy
+    authenticationSpy,
   }
 }
 
-const simulateValidSubmit = (sut: RenderResult, email = faker.internet.email(), password = faker.internet.password()): void => {
+const simulateValidSubmit = (
+  sut: RenderResult,
+  email = faker.internet.email(),
+  password = faker.internet.password()
+): void => {
   populateEmailField(sut, email)
   populatePasswordField(sut, password)
   const submitButton = sut.getByTestId('submit')
   fireEvent.click(submitButton)
 }
 
-const populateEmailField = (sut: RenderResult, email = faker.internet.email()): void => {
+const populateEmailField = (
+  sut: RenderResult,
+  email = faker.internet.email()
+): void => {
   const emailInput = sut.getByTestId('email')
   fireEvent.input(emailInput, { target: { value: email } })
 }
 
-const populatePasswordField = (sut: RenderResult, password = faker.internet.password()): void => {
+const populatePasswordField = (
+  sut: RenderResult,
+  password = faker.internet.password()
+): void => {
   const passwordInput = sut.getByTestId('password')
   fireEvent.input(passwordInput, { target: { value: password } })
 }
 
-const simuteStatusForField = (sut: RenderResult, fieldName: string, validationError?: string): void => {
+const simuteStatusForField = (
+  sut: RenderResult,
+  fieldName: string,
+  validationError?: string
+): void => {
   const emailStatus = sut.getByTestId(`${fieldName}-status`)
   expect(emailStatus.title).toBe(validationError || 'Tudo certo!')
   expect(emailStatus.textContent).toBe(validationError ? '🔴' : '🟢')
@@ -51,6 +73,9 @@ const simuteStatusForField = (sut: RenderResult, fieldName: string, validationEr
 
 describe('Login Component', () => {
   afterEach(cleanup)
+  beforeEach(() => {
+    localStorage.clear()
+  })
 
   test('Should start with initial state', () => {
     const validationError = faker.random.words()
@@ -111,7 +136,7 @@ describe('Login Component', () => {
     simulateValidSubmit(sut, email, password)
     expect(authenticationSpy.params).toEqual({
       email,
-      password
+      password,
     })
   })
 
@@ -133,16 +158,32 @@ describe('Login Component', () => {
   test('Should present error if Authentication fails', async () => {
     const { sut, authenticationSpy } = makeSut()
     const error = new InvalidCredentialsError()
-    jest.spyOn(authenticationSpy, 'auth').mockReturnValueOnce(Promise.reject(error))
-    act(()=> simulateValidSubmit(sut))
+    jest
+      .spyOn(authenticationSpy, 'auth')
+      .mockReturnValueOnce(Promise.reject(error))
+    act(() => simulateValidSubmit(sut))
     await act(async () => {
-       waitFor(async () => {
+      waitFor(async () => {
         const errorWrap = sut.getByTestId('error-wrap')
         const mainError = sut.getByTestId('main-error')
         await waitFor(() => mainError)
         expect(mainError.textContent).toBe(error.message)
         expect(errorWrap.childElementCount).toBe(1)
-      });
-    });
+      })
+    })
+  })
+
+  test('Should add accessToken to localstorage on success', async () => {
+    const { sut, authenticationSpy } = makeSut()
+    act(() => simulateValidSubmit(sut))
+    await act(async () => {
+      waitFor(async () => {
+        const form = sut.getByTestId('form')
+        expect(localStorage.setItem).toHaveBeenCalledWith(
+          'accessToken',
+          authenticationSpy.account.accessToken
+        )
+      })
+    })
   })
 })
